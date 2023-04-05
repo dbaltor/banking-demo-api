@@ -1,9 +1,7 @@
 package online.dbaltor.demoapi.acceptance.steps;
 
-import io.cucumber.java.en.And;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import io.cucumber.datatable.DataTable;
+import io.cucumber.java8.En;
 import lombok.val;
 import online.dbaltor.demoapi.service.StatementPrinterService;
 import online.dbaltor.demoapi.util.MyClock;
@@ -17,40 +15,33 @@ import static org.mockito.BDDMockito.given;
 import java.util.List;
 import java.util.Map;
 
-public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig {
+public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig implements En {
     @Autowired private MyClock clock;
     private String accountNumber;
     private String statement;
     private BankingClient bankingClient;
 
-    @Given("Jane has a bank account number {word}")
-    public void janeHasABankAccountNumber(String number) {
-        accountNumber = number;
-        bankingClient = new BankingClient(getServerPort());
-    }
+    public GetBankStatementStepDefinitions() {
+        Before(() -> bankingClient = new BankingClient(getServerPort()));
 
-    @And("she deposits {word} GBP on {word}")
-    public void sheDepositsGBPOn(String amount, String date) throws Exception {
-        given(clock.todayAsString()).willReturn(date);
-        bankingClient.deposit(accountNumber, amount);
-    }
+        Given("Jane has a bank account number {word}", (String number) -> accountNumber = number);
 
-    @And("she withdraws {word} GBP on {word}")
-    public void sheWithdrawsGBPOn(String amount, String date) throws Exception {
-        given(clock.todayAsString()).willReturn(date);
-        bankingClient.withdraw(accountNumber, amount);
-    }
+        And("she deposits {word} GBP on {word}", (String amount, String date) -> {
+            given(clock.todayAsString()).willReturn(date);
+            bankingClient.deposit(accountNumber, amount);
+        });
 
-    @When("she gets her bank statement")
-    public void sheGetsHerBankStatement() throws Exception {
-        statement = bankingClient.getStatement(accountNumber);
-    }
+        And("she withdraws {word} GBP on {word}", (String amount, String date) -> {
+            given(clock.todayAsString()).willReturn(date);
+            bankingClient.withdraw(accountNumber, amount);
+        }) ;
 
-    @Then("she should be shown the following:")
-    public void sheShouldBeShownTheFollowing(List<Map<String,String>> statement) {
-        val expectedStatement = StatementPrinterService.STATEMENT_HEADER + statementLines(statement);
+        When("she gets her bank statement", () -> statement = bankingClient.getStatement(accountNumber));
 
-        assertThat(this.statement, is(expectedStatement));
+        Then("she should be shown the following:", (DataTable dataTable ) -> {
+            val expectedStatement = StatementPrinterService.STATEMENT_HEADER + statementLines(dataTable.asMaps());
+            assertThat(statement, is(expectedStatement));
+        });
     }
 
     private static String statementLines(List<Map<String, String>> statementLines) {
