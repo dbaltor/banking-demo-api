@@ -1,0 +1,84 @@
+# Restful Banking API built using BDD and TDD
+
+This application serves a banking API capable of processing deposits, withdrawals and statement printing.
+
+## Architecture
+The application is organised as per the **Clean Architecture** pattern, with the use cases in the `services` package and the `controller` and `persistence` layers living in their own packages under the `adapter` package. I haven't felt the need to create any *domain object* with business rules so far but, in the future, they should live in the `domain` package and have no reference to other objects.  
+Only services will be allowed to reference domain objects as dependencies must  always point inwards (**the dependency rule**).
+
+![](./pictures/clean-architecture.jpg)
+
+## Development
+
+I used BDD (outside-in) combined with TDD (red, green, refactor) to guide my development. I have implemented only one acceptance test that triggered everything else.  
+All unit tests required to guide my development have been created. They all run without the Spring application context nor do they need access any other component or infrastructure. After all, they are unit tests!  
+For the sake of simplicity, I have stopped short to unit test the Controller though. They can easily be implemented using Spring `MockMvc` to speed up their execution by again avoiding loading the application context.
+
+## Acceptance tests
+
+If we are practising Continuous Delivery, we must have all our tests automated. I practiced BDD and used Cucumber with JUnit 5. The scenario is an executable specification of the API expected behaviour.  
+  
+## Architectural decisions
+1. Adopted **Clean Architecture** to allow the application to grow whilst keeping their maintainability. Different concerns are kept separate in different layers.
+1. The `adapter` layer made up by the `controller` and `persistence` packages can be swapped out without affecting the inner layers: `services` and `domain`.
+1. Used Spring Boot to quickly get done all the cross-cutting concerns and the plumbing required by an enterprise-grade application so I could focus on the application behaviour.
+1. To exemplify the second point above, leveraging the Spring Boot capabilities, we can easily add support to different databases within the persistence layer, for example: (in-memory) H2 and MySQL/PostgreSQL.
+1. Security has not been implemented for simplicity's sake  although it would be required in a real-life application. We can leverage Spring Security to do so.
+
+## API documentation (OpenAPI)
+
+I have used the `springdoc-openapi` project to automatically render a HTML page containing the OpenAPI v3 documentation for all endpoints exposed via *Spring Boot Controllers*.
+I find automatically generated documentation the best option to keep the documentation always up to date whilst following one of the tenets of the [Agile Manifesto](https://agilemanifesto.org/): **Working software over comprehensive documentation**.  
+  
+With the application running, you can consult the API documentation by pointing your browser at `http://localhost:8080/swagger-ui.html`
+
+![](./pictures/open-api.jpg)
+
+
+## How to test and run the application
+
+- To run the unit tests locally, go to the `.\demo-api` folder and enter:
+```
+mvn test
+```
+
+- To build the application locally you need to have Java 17 installed. Go to the `.\demo-api` folder and enter:
+```  
+./mvnw clean package
+```
+- To run the application using the embedded in-memory database, in the `.\demo-api` folder enter:
+```
+java -jar target/demo-api-1.0.0.jar
+```
+  The API endpoint will be available at `localhost:8080`
+
+- You can interact with the application through your favourite API testing client. I used [HTTPie](https://httpie.io/) in the examples below:
+```
+http post :8080/banking/v1/deposit Content-Type:application/json account=123456 amount=1000
+http post :8080/banking/v1/withdrawal Content-Type:application/json account=123456 amount=900
+http post :8080/banking/v1/deposit Content-Type:application/json account=123456 amount=100.55
+http :8080/banking/v1/statement/123456
+```
+  If you have [jQuery](https://jquery.com/download/) installed on your machine, you can replace the last command above for 
+```
+http :8080/banking/v1/statement/123456 | jq -r .message
+```
+
+  You can inspect the in-memory database pointing your browser at `localhost:8080/h2`. Make sure the *JDBC URL* field contains `jdbc:h2:mem:database`. Click on the **Connect** button.
+
+
+- We can build a container image of the application directly from Maven without using *Dockerfiles* by using [Cloud Native Buildpacks](https://buildpacks.io/). The `spring-boot-maven-plugin` plugin can create an OCI image from the application jar file.  
+  <br>
+  **N.B.**: You need to have a Docker daemon running on your machine. The build-image goal requires access to it. By default, it will communicate with the Docker daemon over a local connection.
+  This works with Docker Engine on all supported platforms without configuration.  
+  <br>
+  To build an image that can run in the cloud, go to the `.\demo-api` folder and enter:
+```
+  mvn spring-boot:build-image
+```
+  The [Paketo Spring Boot buildpack](https://github.com/paketo-buildpacks/spring-boot) is going to build by default an image with the `docker.io/library/demo-api:1.0.0` tag.
+
+ 
+
+
+
