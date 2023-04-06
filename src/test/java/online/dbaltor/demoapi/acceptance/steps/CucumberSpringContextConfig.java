@@ -9,7 +9,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import io.cucumber.spring.CucumberContextConfiguration;
 
 @CucumberContextConfiguration
-@SpringBootTest(classes = DemoApiApplication.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CucumberSpringContextConfig {
     @MockBean
     MyClock clock;
