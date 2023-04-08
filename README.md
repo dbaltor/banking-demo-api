@@ -3,8 +3,9 @@
 This application serves a banking API capable of processing deposits, withdrawals and statement printing.
 
 ## Architecture
-The application is organised as per the **Clean Architecture** pattern, with the use cases in the `services` package and the `controller` and `persistence` layers living in their own packages under the `adapter` package. I haven't felt the need to create any *domain object* with business rules so far but, in the future, they should live in the `domain` package and have no reference to other objects.  
-Only services will be allowed to reference domain objects as dependencies must  always point inwards (**the dependency rule**).
+The application is organised following **Clean Architecture** and **DDD**, with *use cases* a.k.a *application services* in the `application` package being responsible for co-ordinating *domain* objects in the `domain` package.
+The outer layer, `adapter`, contains the `controller` and `persistence` packages.  
+Only application services are allowed to reference domain objects as dependencies must always point inwards (**the dependency rule**).
 
 ![](./pictures/clean-architecture.jpg)
 
