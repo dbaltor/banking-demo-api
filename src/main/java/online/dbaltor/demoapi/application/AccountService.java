@@ -1,6 +1,7 @@
-package online.dbaltor.demoapi.service;
+package online.dbaltor.demoapi.application;
 
 import lombok.RequiredArgsConstructor;
+import online.dbaltor.demoapi.domain.StatementPrinterService;
 import online.dbaltor.demoapi.util.MyClock;
 import online.dbaltor.demoapi.dto.Transaction;
 import online.dbaltor.demoapi.adapter.persistence.AccountRepository;

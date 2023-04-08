@@ -1,4 +1,4 @@
-package online.dbaltor.demoapi.service;
+package online.dbaltor.demoapi.domain;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
