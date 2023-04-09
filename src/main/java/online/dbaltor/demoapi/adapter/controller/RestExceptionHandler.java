@@ -13,47 +13,47 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toMap;
 import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestControllerAdvice
-public class RestExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler {
 
     // 400 BAD REQUEST - Missing Body
-    @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    TransactionResponse handleHttpMessageNotReadable(HttpServletRequest req, HttpMessageNotReadableException ex) {
         val errorMessage = "Request body is missing";
         log.error("400 BAD REQUEST: " + errorMessage);
-        return this.handleExceptionInternal(ex, errorMessage, headers, status, request);
+        return TransactionResponse.of(errorMessage);
     }
 
     // 400 BAD REQUEST - Malformed body
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException ex,
-            HttpHeaders headers,
-            HttpStatusCode status,
-            WebRequest request) {
-        val errors = ex.getBindingResult()
-                .getFieldErrors().stream()
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    Map<String, String> handleMethodArgumentNotValid(HttpServletRequest req, MethodArgumentNotValidException ex) {
+        val errors = ex.getBindingResult().getFieldErrors().stream()
                 .collect(toMap(
                         FieldError::getField,
-                        FieldError::getDefaultMessage));
-
+                        fieldError -> Optional.ofNullable(fieldError.getDefaultMessage()).orElse("")));
         log.error("400 BAD REQUEST: " + errors);
-        return handleExceptionInternal(ex, errors, headers, BAD_REQUEST, request);
+        return errors;
     }
 
     // 400 BAD REQUEST - Malformed path variable
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    TransactionResponse ConstraintViolationException(HttpServletRequest req, ConstraintViolationException ex) {
+    TransactionResponse handleConstraintViolationException(HttpServletRequest req, ConstraintViolationException ex) {
         val errorMessage = ex.getMessage();
         log.error(errorMessage, ex);
         return TransactionResponse.of(errorMessage.substring(errorMessage.indexOf(" ") + 1));
