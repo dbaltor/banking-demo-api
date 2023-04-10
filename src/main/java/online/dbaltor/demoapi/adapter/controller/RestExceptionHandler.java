@@ -12,11 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.Map;
@@ -50,10 +53,19 @@ public class RestExceptionHandler {
         return errors;
     }
 
+    // 400 BAD REQUEST - Missing path variable
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(value = MissingPathVariableException.class)
+    TransactionResponse handleMissingPathVariable(HttpServletRequest req, MissingPathVariableException ex) {
+        val errorMessage = ex.getVariableName() + " is missing";
+        log.error("400 BAD REQUEST: " + errorMessage);
+        return TransactionResponse.of(errorMessage);
+    }
+
     // 400 BAD REQUEST - Malformed path variable
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
-    TransactionResponse handleConstraintViolationException(HttpServletRequest req, ConstraintViolationException ex) {
+    TransactionResponse handleConstraintViolation(HttpServletRequest req, ConstraintViolationException ex) {
         val errorMessage = ex.getMessage();
         log.error(errorMessage, ex);
         return TransactionResponse.of(errorMessage.substring(errorMessage.indexOf(" ") + 1));

@@ -15,8 +15,8 @@ I used BDD (outside-in) combined with TDD (red, green, refactor) to guide my dev
 
 ![](./pictures/bdd_with_tdd.png)
 
-I have implemented only one acceptance test that triggered everything else. All unit tests required to guide my development have been created. They all run without the Spring application context nor do they need access any other component or infrastructure. After all, they are unit tests!  
-For the sake of simplicity, I have stopped short to unit test the Controller though. They can easily be implemented using Spring `MockMvc` to speed up their execution by again avoiding loading the application context.
+I have implemented only one acceptance test that triggered everything else. All unit tests required to guide my development have been created. They all run without the Spring application context nor do they need to access any other component or infrastructure. After all, they are unit tests!  
+The only exception are the *Controller* unit tests that partially load the Spring application context and use `MockMvc` to interact with the Controller without running the embedded server. 
 
 ## Acceptance tests
 

@@ -20,6 +20,7 @@ import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 
+import static online.dbaltor.demoapi.adapter.controller.BankingController.*;
 import static online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest.ACCOUNT_NUMBER_FORMAT;
 import static online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest.ACCOUNT_NUMBER_FORMAT_ERROR_MSG;
 import static org.springframework.http.MediaType.*;
@@ -29,8 +30,10 @@ import static org.springframework.http.MediaType.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Banking", description = "Common banking operations")
-@RequestMapping(value = "banking/v1",  produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = BASE_URL,  produces = APPLICATION_JSON_VALUE)
 public class BankingController {
+
+    public static final String BASE_URL = "/banking/v1";
 
     private @NonNull AccountService accountService;
 
@@ -69,7 +72,7 @@ public class BankingController {
             @ApiResponse(responseCode = "400", description = "Bad request - invalid account number"),
             @ApiResponse(responseCode = "404", description = "Bad request - account not found"),
             @ApiResponse(responseCode = "500", description = "Internal Server Error")})
-    @GetMapping("statement/{account}")
+    @GetMapping(value = {"statement", "statement/", "statement/{account}"})
     public ResponseEntity<TransactionResponse> getStatement(
             @PathVariable("account")
             @Pattern(regexp = ACCOUNT_NUMBER_FORMAT, message = ACCOUNT_NUMBER_FORMAT_ERROR_MSG)
