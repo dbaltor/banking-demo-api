@@ -12,6 +12,8 @@ import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
 import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
 import online.dbaltor.demoapi.application.AccountService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +86,7 @@ public class BankingController {
     private static ResponseEntity<TransactionResponse> handleException(AccountDbException accountDbException) {
         accountDbException.error().ifPresent( error -> log.error("Exception: ", error));
         return switch (accountDbException.errorType()) {
-            case ACCOUNT_NOT_FOUND -> ResponseEntity.badRequest().body(TransactionResponse.of("Account not found"));
+            case ACCOUNT_NOT_FOUND -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(TransactionResponse.of("Account not found"));
             case UNEXPECTED -> ResponseEntity.internalServerError().body(TransactionResponse.of("Something went wrong"));
         };
     }
