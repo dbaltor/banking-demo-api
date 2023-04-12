@@ -10,12 +10,12 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static online.dbaltor.demoapi.adapter.controller.BankingController.BASE_URL;
 import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.MediaType.*;
 
 @RequiredArgsConstructor
 public class BankingClient  {
+    private static final String BASE_URL = "/banking/v1";
     private @NonNull int serverPort;
 
     public void deposit(String accountNumber, String amount) throws Exception {
