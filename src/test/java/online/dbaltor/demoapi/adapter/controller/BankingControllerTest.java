@@ -3,14 +3,22 @@ package online.dbaltor.demoapi.adapter.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
+import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
+import online.dbaltor.demoapi.adapter.persistence.AccountDbException.ErrorType;
 import online.dbaltor.demoapi.application.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
+
+import static online.dbaltor.demoapi.adapter.persistence.AccountDbException.ErrorType.*;
 import static org.hamcrest.Matchers.is;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -97,5 +105,33 @@ public class BankingControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                 .andExpect(jsonPath("$.message", is("Account number must be a 6-digit number")));
+    }
+
+    @Test
+    void shouldReturn404WhenStatementAccountIsNotFound() throws Exception {
+        // Given
+        val accountDbException = AccountDbException.of(ACCOUNT_NOT_FOUND, Optional.empty());
+        given(accountService.getStatement(any())).willThrow(accountDbException);
+        // When
+        mockMvc.perform(get(BASE_URL + "/statement/123456")
+                        .contentType(APPLICATION_JSON_VALUE))
+                // Then
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Account not found")));
+    }
+
+    @Test
+    void shouldReturn500WhenUnexpectedErrorHappens() throws Exception {
+        // Given
+        val accountDbException = AccountDbException.of(UNEXPECTED, Optional.empty());
+        given(accountService.getStatement(any())).willThrow(accountDbException);
+        // When
+        mockMvc.perform(get(BASE_URL + "/statement/123456")
+                        .contentType(APPLICATION_JSON_VALUE))
+                // Then
+                .andExpect(status().is5xxServerError())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Something went wrong")));
     }
 }
