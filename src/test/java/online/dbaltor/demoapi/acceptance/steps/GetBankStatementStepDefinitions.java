@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig implements En {
+    private static final String STATEMENT_HEADER = "DATE       | AMOUNT | BALANCE\n";
     @Autowired private MyClock clock;
     private String accountNumber;
     private String statement;
@@ -39,7 +40,7 @@ public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig
         When("she gets her bank statement", () -> statement = bankingClient.getStatement(accountNumber));
 
         Then("she should be shown the following:", (DataTable dataTable ) -> {
-            val expectedStatement = StatementPrinterService.STATEMENT_HEADER + statementLines(dataTable.asMaps());
+            val expectedStatement = STATEMENT_HEADER + statementLines(dataTable.asMaps());
             assertThat(statement, is(expectedStatement));
         });
     }

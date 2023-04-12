@@ -11,7 +11,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.hamcrest.Matchers.is;
 
-import static online.dbaltor.demoapi.adapter.controller.BankingController.BASE_URL;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(controllers = BankingController.class)
 public class BankingControllerTest {
+    private static final String BASE_URL = "/banking/v1";
     @Autowired ObjectMapper objectMapper;
     @Autowired private MockMvc mockMvc;
 

@@ -19,8 +19,7 @@ import static online.dbaltor.demoapi.dto.Transaction.Type.*;
 @Component
 @RequiredArgsConstructor
 public class StatementPrinterService {
-
-    public static final String STATEMENT_HEADER = "DATE       | AMOUNT | BALANCE\n";
+    private static final String STATEMENT_HEADER = "DATE       | AMOUNT | BALANCE\n";
     private static DecimalFormat decimalFormatter = new DecimalFormat("0.00");
 
     public String print(List<Transaction> transactions) {
