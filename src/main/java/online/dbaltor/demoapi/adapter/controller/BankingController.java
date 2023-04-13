@@ -13,7 +13,6 @@ import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
 import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
 import online.dbaltor.demoapi.application.AccountService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +21,6 @@ import jakarta.validation.Valid;
 
 import java.math.BigDecimal;
 
-import static online.dbaltor.demoapi.adapter.controller.BankingController.*;
 import static online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest.ACCOUNT_NUMBER_FORMAT;
 import static online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest.ACCOUNT_NUMBER_FORMAT_ERROR_MSG;
 import static org.springframework.http.MediaType.*;

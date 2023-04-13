@@ -1,7 +1,6 @@
 package online.dbaltor.demoapi.domain;
 
 import lombok.val;
-import online.dbaltor.demoapi.domain.StatementPrinterService;
 import online.dbaltor.demoapi.dto.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
-import online.dbaltor.demoapi.adapter.persistence.AccountDbException.ErrorType;
 import online.dbaltor.demoapi.application.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
