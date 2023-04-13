@@ -32,9 +32,8 @@ import static org.springframework.http.MediaType.*;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Banking", description = "Common banking operations")
-@RequestMapping(value = BASE_URL,  produces = APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/banking/v1",  produces = APPLICATION_JSON_VALUE)
 public class BankingController {
-    static final String BASE_URL = "/banking/v1";
     private @NonNull AccountService accountService;
 
     @Operation(summary = "Request a deposit transaction")
