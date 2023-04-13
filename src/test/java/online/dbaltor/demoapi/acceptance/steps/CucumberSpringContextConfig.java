@@ -1,6 +1,5 @@
 package online.dbaltor.demoapi.acceptance.steps;
 
-import online.dbaltor.demoapi.DemoApiApplication;
 import online.dbaltor.demoapi.util.MyClock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;

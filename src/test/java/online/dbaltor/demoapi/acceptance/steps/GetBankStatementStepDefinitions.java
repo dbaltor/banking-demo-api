@@ -3,7 +3,6 @@ package online.dbaltor.demoapi.acceptance.steps;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java8.En;
 import lombok.val;
-import online.dbaltor.demoapi.domain.StatementPrinterService;
 import online.dbaltor.demoapi.util.MyClock;
 import org.springframework.beans.factory.annotation.Autowired;
 
