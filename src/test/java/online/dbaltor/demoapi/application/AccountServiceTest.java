@@ -15,7 +15,7 @@ import java.util.List;
 
 import static online.dbaltor.demoapi.dto.Transaction.Type.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class AccountServiceTest {
@@ -44,7 +44,7 @@ class AccountServiceTest {
         // When
         accountService.deposit(ACCOUNT_NUMBER, AMOUNT);
         // Then
-        verify(accountRepository).addTransaction("1", Transaction.of(TODAY, AMOUNT, DEPOSIT));
+        then(accountRepository).should().addTransaction("1", Transaction.of(TODAY, AMOUNT, DEPOSIT));
     }
 
     @Test
@@ -54,7 +54,7 @@ class AccountServiceTest {
         // When
         accountService.withdraw(ACCOUNT_NUMBER, AMOUNT);
         // Then
-        verify(accountRepository).addTransaction("1", Transaction.of(TODAY, AMOUNT, WITHDRAWAL));
+        then(accountRepository).should().addTransaction("1", Transaction.of(TODAY, AMOUNT, WITHDRAWAL));
     }
 
     @Test
@@ -65,6 +65,6 @@ class AccountServiceTest {
         // When
         accountService.getStatement(ACCOUNT_NUMBER);
         // Then
-        verify(statementPrinterService).print(transactions);
+        then(statementPrinterService).should().print(transactions);
     }
 }

@@ -14,7 +14,7 @@ import java.util.Optional;
 import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
 import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.then;
 
 @ExtendWith(MockitoExtension.class)
 class AccountRepositoryTest {
@@ -39,7 +39,7 @@ class AccountRepositoryTest {
         // When
         accountRepository.addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, AMOUNT, DEPOSIT));
         // Then
-        verify(accountDbRepository).save(accountDb);
+        then(accountDbRepository).should().save(accountDb);
     }
 
     @Test
@@ -54,7 +54,7 @@ class AccountRepositoryTest {
         // When
         accountRepository.addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, AMOUNT, DEPOSIT));
         // Then
-        verify(accountDbRepository).save(finalAccountDb);
+        then(accountDbRepository).should().save(finalAccountDb);
     }
 
     @Test
@@ -65,7 +65,7 @@ class AccountRepositoryTest {
         // When
         accountRepository.addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, AMOUNT, WITHDRAWAL));
         // Then
-        verify(accountDbRepository).save(accountDb);
+        then(accountDbRepository).should().save(accountDb);
     }
 
     @Test
@@ -80,6 +80,6 @@ class AccountRepositoryTest {
         // When
         accountRepository.addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, AMOUNT, WITHDRAWAL));
         // Then
-        verify(accountDbRepository).save(finalAccountDb);
+        then(accountDbRepository).should().save(finalAccountDb);
     }
 }
