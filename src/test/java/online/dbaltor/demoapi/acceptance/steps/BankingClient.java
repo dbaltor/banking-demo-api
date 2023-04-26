@@ -46,7 +46,7 @@ public class BankingClient  {
                 .uri(BASE_URL + "/statement/" + accountNumber)
                 .retrieve()
                 .bodyToMono(TransactionResponse.class)
-                .map(TransactionResponse::getMessage)
+                .map(TransactionResponse::message)
                 .block();
     }
 

@@ -1,8 +1,5 @@
 package online.dbaltor.demoapi.adapter.controller.dto;
 
-import lombok.*;
+import jakarta.validation.constraints.NotEmpty;
 
-@Data @NoArgsConstructor @RequiredArgsConstructor(staticName = "of")
-public class TransactionResponse {
-    private @NonNull String message;
-}
+public record TransactionResponse(@NotEmpty String message) {}
