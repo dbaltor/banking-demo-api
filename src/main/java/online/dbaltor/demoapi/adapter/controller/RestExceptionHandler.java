@@ -29,7 +29,7 @@ public class RestExceptionHandler {
     TransactionResponse handleHttpMessageNotReadable(HttpServletRequest req, HttpMessageNotReadableException ex) {
         val errorMessage = "Request body is missing";
         log.error("400 BAD REQUEST: " + errorMessage);
-        return TransactionResponse.of(errorMessage);
+        return new TransactionResponse(errorMessage);
     }
 
     // 400 BAD REQUEST - Malformed body
@@ -50,7 +50,7 @@ public class RestExceptionHandler {
     TransactionResponse handleMissingPathVariable(HttpServletRequest req, MissingPathVariableException ex) {
         val errorMessage = ex.getVariableName() + " is missing";
         log.error("400 BAD REQUEST: " + errorMessage);
-        return TransactionResponse.of(errorMessage);
+        return new TransactionResponse(errorMessage);
     }
 
     // 400 BAD REQUEST - Malformed path variable
@@ -59,6 +59,6 @@ public class RestExceptionHandler {
     TransactionResponse handleConstraintViolation(HttpServletRequest req, ConstraintViolationException ex) {
         val errorMessage = ex.getMessage();
         log.error(errorMessage, ex);
-        return TransactionResponse.of(errorMessage.substring(errorMessage.indexOf(" ") + 1));
+        return new TransactionResponse(errorMessage.substring(errorMessage.indexOf(" ") + 1));
     }
 }

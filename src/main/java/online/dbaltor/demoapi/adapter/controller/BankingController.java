@@ -42,8 +42,8 @@ public class BankingController {
     @PostMapping(value = "deposit", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionResponse> deposit(@Valid @RequestBody TransactionRequest transactionRequest) {
         try {
-            accountService.deposit(transactionRequest.getAccount(), new BigDecimal(transactionRequest.getAmount()));
-            return ResponseEntity.ok(TransactionResponse.of("Deposit transaction successful"));
+            accountService.deposit(transactionRequest.account(), new BigDecimal(transactionRequest.amount()));
+            return ResponseEntity.ok(new TransactionResponse("Deposit transaction successful"));
         } catch (AccountDbException e) {
             return handleException(e);
         }
@@ -56,8 +56,8 @@ public class BankingController {
     @PostMapping(value = "withdrawal", consumes = APPLICATION_JSON_VALUE)
     public ResponseEntity<TransactionResponse> withdraw(@Valid @RequestBody TransactionRequest transactionRequest) {
         try {
-            accountService.withdraw(transactionRequest.getAccount(), new BigDecimal(transactionRequest.getAmount()));
-            return ResponseEntity.ok(TransactionResponse.of("Withdrawal transaction successful"));
+            accountService.withdraw(transactionRequest.account(), new BigDecimal(transactionRequest.amount()));
+            return ResponseEntity.ok(new TransactionResponse("Withdrawal transaction successful"));
         } catch (AccountDbException e) {
             return handleException(e);
         }
@@ -75,7 +75,7 @@ public class BankingController {
             @Pattern(regexp = ACCOUNT_NUMBER_FORMAT, message = ACCOUNT_NUMBER_FORMAT_ERROR_MSG)
             String accountNumber) {
         try {
-            return ResponseEntity.ok(TransactionResponse.of(accountService.getStatement(accountNumber)));
+            return ResponseEntity.ok(new TransactionResponse(accountService.getStatement(accountNumber)));
         } catch (AccountDbException e) {
             return handleException(e);
         }
@@ -83,8 +83,8 @@ public class BankingController {
     private static ResponseEntity<TransactionResponse> handleException(AccountDbException accountDbException) {
         accountDbException.error().ifPresent( error -> log.error("Exception: ", error));
         return switch (accountDbException.errorType()) {
-            case ACCOUNT_NOT_FOUND -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(TransactionResponse.of("Account not found"));
-            case UNEXPECTED -> ResponseEntity.internalServerError().body(TransactionResponse.of("Something went wrong"));
+            case ACCOUNT_NOT_FOUND -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new TransactionResponse("Account not found"));
+            case UNEXPECTED -> ResponseEntity.internalServerError().body(new TransactionResponse("Something went wrong"));
         };
     }
 }
