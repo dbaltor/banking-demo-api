@@ -18,7 +18,7 @@ public class BankingClient  {
     private static final String BASE_URL = "/banking/v1";
     private @NonNull int serverPort;
 
-    public void deposit(String accountNumber, String amount) throws Exception {
+    public void deposit(String accountNumber, String amount) {
         val transactionRequest = new TransactionRequest(accountNumber, amount);
         testClient()
                 .post()
@@ -29,7 +29,7 @@ public class BankingClient  {
                 .expectStatus().isOk();
     }
 
-    public void withdraw(String accountNumber, String amount) throws Exception {
+    public void withdraw(String accountNumber, String amount) {
         val transactionRequest = new TransactionRequest(accountNumber, amount);
         testClient()
                 .post()
@@ -40,7 +40,7 @@ public class BankingClient  {
                 .expectStatus().isOk();
     }
 
-    public String getStatement(String accountNumber) throws Exception {
+    public String getStatement(String accountNumber) {
         return client()
                 .get()
                 .uri(BASE_URL + "/statement/" + accountNumber)
