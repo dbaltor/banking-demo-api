@@ -45,6 +45,7 @@ With the application running, you can consult the API documentation by pointing 
 ```
 mvn test
 ```
+  The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
 
 - To build the application locally you need to have Java 17 installed. Go to the `.\demo-api` folder and enter:
 ```  
