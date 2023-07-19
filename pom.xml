@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>online.dbaltor</groupId>
-    <artifactId>demo-api</artifactId>
+    <artifactId>banking-demo-api</artifactId>
     <version>1.0.0</version>
-    <name>demo-api</name>
+    <name>banking-demo-api</name>
     <description>Demo API by Denis Baltor</description>
     <properties>
         <java.version>17</java.version>
@@ -127,6 +127,12 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
+                    <image>
+                        <!--<name>docker.io/dbaltor/${project.artifactId}:{project.version}</name>-->
+                        <env>
+                            <BPE_SPRING_PROFILES_ACTIVE>prod</BPE_SPRING_PROFILES_ACTIVE>
+                        </env>
+                    </image>
                 </configuration>
             </plugin>
             <plugin>

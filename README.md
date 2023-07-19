@@ -41,19 +41,19 @@ With the application running, you can consult the API documentation by pointing 
 
 ## How to test and run the application
 
-- To run the unit tests locally, go to the `.\demo-api` folder and enter:
+- To run the unit tests locally, enter:
 ```
-mvn test
+./mvnw test
 ```
   The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
 
-- To build the application locally you need to have Java 17 installed. Go to the `.\demo-api` folder and enter:
+- To build the application locally you need to have Java 17 installed. Enter:
 ```  
 ./mvnw clean package
 ```
-- To run the application using the embedded in-memory database, in the `.\demo-api` folder enter:
+- To run the application using the embedded in-memory database, enter:
 ```
-java -jar target/demo-api-1.0.0.jar
+java -jar target/banking-demo-api-1.0.0.jar
 ```
   The API endpoint will be available at `localhost:8080`
 
@@ -77,11 +77,27 @@ http :8080/banking/v1/statement/123456 | jq -r .message
   **N.B.**: You need to have a Docker daemon running on your machine. The build-image goal requires access to it. By default, it will communicate with the Docker daemon over a local connection.
   This works with Docker Engine on all supported platforms without configuration.  
   <br>
-  To build an image that can run in the cloud, go to the `.\demo-api` folder and enter:
+  To build a container image that can run in the cloud, enter:
 ```
   mvn spring-boot:build-image
 ```
-  The [Paketo Spring Boot buildpack](https://github.com/paketo-buildpacks/spring-boot) is going to build by default an image with the `docker.io/library/demo-api:1.0.0` tag.
+
+  The [Paketo Spring Boot buildpack](https://github.com/paketo-buildpacks/spring-boot) is going to build an image with the `docker.io/library/banking-demo-api:1.0.0` tag by default.
+
+- To build and run both the application and MySQL containers, enter:  
+  `make docker-up`  
+  
+  The Makefile is going to use the Paketo buildpack mentioned above to build the application container. It will then spin two containers up: *app* and *database*. The application is going to connect to the MySQL database this time.  
+  To verify the containers running, from the *project-root* folder enter:  
+  `docker-compse ps`  
+  
+  The application will be available at `localhost:8080` again.  
+  
+  The MySQL database running in its container can be accessed through the *root* user with *password* password. For example, if you have MySQL client installed on your machine, use:  
+  `mysql -u root -ppassword -h 127.0.0.1 database`  
+  
+- To shut down both containers, from the *project root* folder enter:  
+  `make docker-down` 
 
  
 
