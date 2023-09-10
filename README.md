@@ -41,13 +41,22 @@ With the application running, you can consult the API documentation by pointing 
 
 ## How to test and run the application
 
-- To run the unit tests locally, enter:
+**You need to have Java 17 installed.**  
+  
+- To run the unit tests, enter:
 ```
 ./mvnw test
 ```
   The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
 
-- To build the application locally you need to have Java 17 installed. Enter:
+- To run the integration tests, enter:
+```
+./mvnw verify
+```
+The integration tests will try to download and spin up a MySQL container.  
+**N.B.**: You need to have a Docker daemon running on your machine.
+
+- To build the application, enter:
 ```  
 ./mvnw clean package
 ```
