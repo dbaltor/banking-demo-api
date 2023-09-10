@@ -1,6 +1,6 @@
 .PHONY: docker-up
 docker-up:
-	mvn spring-boot:build-image
+	./mvnw spring-boot:build-image
 	USER=root PASSWORD=password docker-compose up -d
 
 .PHONY: docker-down
