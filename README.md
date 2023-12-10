@@ -41,7 +41,7 @@ With the application running, you can consult the API documentation by pointing 
 
 ## How to test and run the application
 
-**You need to have Java 17 installed.**  
+**You need to have Java 21 installed.**  
   
 - To run the unit tests, enter:
 ```
