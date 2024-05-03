@@ -18,7 +18,7 @@
         <maven.test.plugins>3.2.5</maven.test.plugins>
         <!-- JDK21 Dynamic loading of agent: https://github.com/mockito/mockito/issues/3037 -->
         <argLine>-XX:+EnableDynamicAgentLoading</argLine>
-        <cucumber.version>7.11.2</cucumber.version>
+        <cucumber.version>7.17.0</cucumber.version>
     </properties>
 
     <dependencies>
