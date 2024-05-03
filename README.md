@@ -108,6 +108,16 @@ http :8080/banking/v1/statement/123456 | jq -r .message
 - To shut down both containers, from the *project root* folder enter:  
   `make docker-down` 
 
+## Vulnerabilities Scanning
+The OWASP `dependency-check` plugin accesses the NIST National Vulnerability Database to update its list of known vulnerabilities.
+It uses the API Key that is stored in the pipeline. When tyring to build the app on your laptop without the key, the following warning message is going to be printed:
+>[WARNING] An NVD API Key was not provided - it is highly recommended to use an NVD API key as the update can take a VERY long time without an API Key
+
+You can fix it by setting the `NVDAPIKEY` env property with the value stored in [here](https://start.1password.com/open/i?a=6ZAIV346FNGOXJGIFG6KTBAJIE&h=imperatives.1password.com&i=nug32jdifzlrie2unz7y6zuawi&v=o2qet5ltyjcq7ibvnrgunyu2iu).  
+A new key can be generated [here](https://nvd.nist.gov/developers/request-an-api-key), if need be.
+
+The report describing the found vulnerabilities is generated at `target/dependency-check-report.html`.
+
 ## Linting
 The code's format is automatically checked by [Spotless](https://github.com/diffplug/spotless).  
 The compilation is going to fail with an error message showing the exact location of any stylistic error.

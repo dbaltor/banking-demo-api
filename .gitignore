@@ -4,6 +4,12 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+# SDKMAN
+.sdkmanrc
+
+# Dependency Check data
+dependency-check/data/
+
 ### STS ###
 .apt_generated
 .classpath
@@ -31,3 +37,4 @@ build/
 
 ### VS Code ###
 .vscode/
+
