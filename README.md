@@ -108,7 +108,17 @@ http :8080/banking/v1/statement/123456 | jq -r .message
 - To shut down both containers, from the *project root* folder enter:  
   `make docker-down` 
 
- 
+## Linting
+The code's format is automatically checked by [Spotless](https://github.com/diffplug/spotless).  
+The compilation is going to fail with an error message showing the exact location of any stylistic error.
+```
+[ERROR] Failed to execute goal com.diffplug.spotless:spotless-maven-plugin:2.43.0:check (default-cli) on project banking-demo-api: The following files had format violations:
+[ERROR]     ...
+[ERROR]     ...
+[ERROR]     ...
+[ERROR] Run 'mvn spotless:apply' to fix these violations.
+```
+You can fix the code manually or, as stated in the error message, you can simply run `mvn spotless:apply` to get the code fixed for you.
 
 
 

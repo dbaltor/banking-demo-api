@@ -1,9 +1,8 @@
 package online.dbaltor.demoapi.util;
 
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import org.springframework.stereotype.Component;
 
 @Generated
 @Component
@@ -13,5 +12,4 @@ public class MyClock {
     public String todayAsString() {
         return LocalDate.now().format(DD_MM_YYYY);
     }
-
 }
