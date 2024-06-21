@@ -1,4 +1,7 @@
-package online.dbaltor.demoapi.acceptance.steps;
+package online.dbaltor.demoapi.acceptance.steps.domain;
+
+import static org.springframework.http.HttpHeaders.*;
+import static org.springframework.http.MediaType.*;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +13,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
-import static org.springframework.http.HttpHeaders.*;
-import static org.springframework.http.MediaType.*;
-
 @RequiredArgsConstructor
-public class BankingClient  {
+public class BankingClient {
     private static final String BASE_URL = "/banking/v1";
     private @NonNull int serverPort;
 
@@ -26,7 +26,8 @@ public class BankingClient  {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(transactionRequest), TransactionRequest.class)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
     }
 
     public void withdraw(String accountNumber, String amount) {
@@ -37,12 +38,12 @@ public class BankingClient  {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(Mono.just(transactionRequest), TransactionRequest.class)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus()
+                .isOk();
     }
 
     public String getStatement(String accountNumber) {
-        return client()
-                .get()
+        return client().get()
                 .uri(BASE_URL + "/statement/" + accountNumber)
                 .retrieve()
                 .bodyToMono(TransactionResponse.class)
@@ -51,15 +52,11 @@ public class BankingClient  {
     }
 
     private WebTestClient testClient() {
-        return WebTestClient
-                .bindToServer()
-                .baseUrl("http://localhost:" + serverPort)
-                .build();
+        return WebTestClient.bindToServer().baseUrl("http://localhost:" + serverPort).build();
     }
 
     private WebClient client() {
-        return WebClient
-                .builder()
+        return WebClient.builder()
                 .baseUrl("http://localhost:" + serverPort)
                 .defaultHeader(CONTENT_TYPE, APPLICATION_JSON_VALUE)
                 .build();

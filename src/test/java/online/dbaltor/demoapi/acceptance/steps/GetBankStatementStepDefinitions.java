@@ -10,6 +10,8 @@ import io.cucumber.java8.En;
 import java.util.List;
 import java.util.Map;
 import lombok.val;
+import online.dbaltor.demoapi.acceptance.spring.CucumberSpringContextConfig;
+import online.dbaltor.demoapi.acceptance.steps.domain.BankingClient;
 import online.dbaltor.demoapi.util.MyClock;
 import org.springframework.beans.factory.annotation.Autowired;
 

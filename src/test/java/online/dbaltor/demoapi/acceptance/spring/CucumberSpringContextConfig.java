@@ -1,4 +1,4 @@
-package online.dbaltor.demoapi.acceptance.steps;
+package online.dbaltor.demoapi.acceptance.spring;
 
 import io.cucumber.spring.CucumberContextConfiguration;
 import online.dbaltor.demoapi.util.MyClock;
