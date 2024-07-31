@@ -193,15 +193,12 @@
                     <target>${java.version}</target>
                 </configuration>
             </plugin>
+            <!-- TESTING -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.test.plugins}</version>
                 <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                        <include>**/*AT.java</include>
-                    </includes>
                     <properties>
                         <!-- Work around. Surefire does not include enough
                              information to disambiguate between different
@@ -211,22 +208,6 @@
                         </configurationParameters>
                     </properties>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>${maven.test.plugins}</version>
-                <configuration>
-                    <useModulePath>false</useModulePath>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <!-- CODE COVERAGE -->
             <plugin>
@@ -268,7 +249,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>80%</minimum>
+                                            <minimum>85%</minimum>
                                         </limit>
                                         <limit>
                                             <counter>CLASS</counter>
@@ -328,7 +309,6 @@
                     </java>
                 </configuration>
             </plugin>
-
             <!-- DEPENDENCY CHECKS-->
             <plugin>
                 <groupId>org.owasp</groupId>
@@ -355,4 +335,58 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- ACCEPTANCE TESTS-->
+        <profile>
+            <id>acceptance</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.test.plugins}</version>
+                        <configuration>
+                            <includes>**/*AT</includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <!-- INTEGRATION TESTS-->
+        <profile>
+            <id>integration</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.test.plugins}</version>
+                        <configuration>
+                            <excludes>
+                                <exclude>**/*Test</exclude>
+                                <exclude>**/*AT</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-failsafe-plugin</artifactId>
+                        <version>${maven.test.plugins}</version>
+                        <configuration>
+                            <useModulePath>false</useModulePath>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>integration-test</goal>
+                                    <goal>verify</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
