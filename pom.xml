@@ -333,7 +333,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>9.1.0</version>
+                <version>10.0.2</version>
                 <configuration>
                     <!-- https://www.first.org/cvss/v3.1/specification-document#Qualitative-Severity-Rating-Scale -->
                     <failBuildOnCVSS>7</failBuildOnCVSS>
