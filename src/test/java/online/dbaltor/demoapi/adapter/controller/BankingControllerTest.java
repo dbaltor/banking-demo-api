@@ -3,7 +3,7 @@ package online.dbaltor.demoapi.adapter.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
-import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
+import online.dbaltor.demoapi.application.AccountException;
 import online.dbaltor.demoapi.application.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
 
-import static online.dbaltor.demoapi.adapter.persistence.AccountDbException.ErrorType.*;
+import static online.dbaltor.demoapi.application.AccountException.ErrorType.*;
 import static org.hamcrest.Matchers.is;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -109,7 +109,7 @@ public class BankingControllerTest {
     @Test
     void shouldReturn404WhenStatementAccountIsNotFound() throws Exception {
         // Given
-        val accountDbException = AccountDbException.of(ACCOUNT_NOT_FOUND, Optional.empty());
+        val accountDbException = AccountException.of(ACCOUNT_NOT_FOUND, Optional.empty());
         given(accountService.getStatement(any())).willThrow(accountDbException);
         // When
         mockMvc.perform(get(BASE_URL + "/statement/123456")
@@ -123,7 +123,7 @@ public class BankingControllerTest {
     @Test
     void shouldReturn500WhenUnexpectedErrorHappens() throws Exception {
         // Given
-        val accountDbException = AccountDbException.of(UNEXPECTED, Optional.empty());
+        val accountDbException = AccountException.of(UNEXPECTED, Optional.empty());
         given(accountService.getStatement(any())).willThrow(accountDbException);
         // When
         mockMvc.perform(get(BASE_URL + "/statement/123456")

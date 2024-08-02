@@ -1,13 +1,15 @@
 package online.dbaltor.demoapi.adapter.persistence;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
+import online.dbaltor.demoapi.application.AccountException;
 import online.dbaltor.demoapi.dto.Transaction;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
-import static online.dbaltor.demoapi.adapter.persistence.AccountDbException.ErrorType.*;
+import static online.dbaltor.demoapi.application.AccountException.ErrorType.*;
 
 @Component
 @RequiredArgsConstructor
@@ -17,15 +19,13 @@ public class AccountRepository {
 
     public void addTransaction(String accountNumber, Transaction transaction) {
         try {
-            accDbRepository.findByNumber(accountNumber)
-                    .ifPresentOrElse(
-                            accountDb -> accDbRepository.save(
-                                    accountDb.addTransaction(TransactionDb.of(transaction))),
-                            () -> accDbRepository.save(AccountDb.of(accountNumber)
-                                    .addTransaction(TransactionDb.of(transaction)))
-                    );
-        } catch( Exception e) {
-            throw AccountDbException.of(UNEXPECTED, Optional.of(e));
+            val accountDb = accDbRepository.findByNumber(accountNumber).orElseThrow(
+                    () -> AccountException.of(ACCOUNT_NOT_FOUND, Optional.empty()));
+            accDbRepository.save(accountDb.addTransaction(TransactionDb.of(transaction)));
+        } catch (AccountException accountException) {
+            throw accountException;
+        } catch (Exception e) {
+            throw AccountException.of(UNEXPECTED, Optional.of(e));
         }
     }
 
@@ -37,6 +37,6 @@ public class AccountRepository {
                             .map(TransactionDb::transaction)
                             .toList();
                 })
-                .orElseThrow(() -> AccountDbException.of(ACCOUNT_NOT_FOUND, Optional.empty()));
+                .orElseThrow(() -> AccountException.of(ACCOUNT_NOT_FOUND, Optional.empty()));
     }
 }

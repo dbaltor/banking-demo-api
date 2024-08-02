@@ -1,4 +1,4 @@
-package online.dbaltor.demoapi.adapter.persistence;
+package online.dbaltor.demoapi.application;
 
 import lombok.Getter;
 import lombok.NonNull;
@@ -9,9 +9,10 @@ import java.util.Optional;
 
 @Getter @Accessors(fluent = true)
 @RequiredArgsConstructor(staticName = "of")
-public class AccountDbException extends RuntimeException{
+public class AccountException extends RuntimeException{
     public static enum ErrorType {
         ACCOUNT_NOT_FOUND,
+        INSUFFICIENT_FUNDS,
         UNEXPECTED
     }
 

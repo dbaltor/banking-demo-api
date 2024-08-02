@@ -1,9 +1,13 @@
 package online.dbaltor.demoapi.application;
 
+import static online.dbaltor.demoapi.application.AccountException.ErrorType.INSUFFICIENT_FUNDS;
 import static online.dbaltor.demoapi.dto.Transaction.Type.*;
 
 import java.math.BigDecimal;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
 import online.dbaltor.demoapi.domain.StatementPrinterService;
 import online.dbaltor.demoapi.dto.Transaction;
@@ -25,6 +29,13 @@ public class AccountService {
     }
 
     public void withdraw(String accountNumber, BigDecimal amount) {
+        val accountBalance = accountRepository.retrieveAllTransactions(accountNumber).stream()
+                .map(tx -> tx.getType() == DEPOSIT ? tx.getAmount() : tx.getAmount().negate())
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        if (amount.compareTo(accountBalance) > 0)
+            throw AccountException.of(
+                    INSUFFICIENT_FUNDS,
+                    Optional.empty());
         accountRepository.addTransaction(
                 accountNumber, Transaction.of(clock.todayAsString(), amount, WITHDRAWAL));
     }

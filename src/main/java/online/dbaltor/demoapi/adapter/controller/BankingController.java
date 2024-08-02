@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
-import online.dbaltor.demoapi.adapter.persistence.AccountDbException;
+import online.dbaltor.demoapi.application.AccountException;
 import online.dbaltor.demoapi.application.AccountService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +44,7 @@ public class BankingController {
         try {
             accountService.deposit(transactionRequest.account(), new BigDecimal(transactionRequest.amount()));
             return ResponseEntity.ok(new TransactionResponse("Deposit transaction successful"));
-        } catch (AccountDbException e) {
+        } catch (AccountException e) {
             return handleException(e);
         }
     }
@@ -58,7 +58,7 @@ public class BankingController {
         try {
             accountService.withdraw(transactionRequest.account(), new BigDecimal(transactionRequest.amount()));
             return ResponseEntity.ok(new TransactionResponse("Withdrawal transaction successful"));
-        } catch (AccountDbException e) {
+        } catch (AccountException e) {
             return handleException(e);
         }
     }
@@ -76,14 +76,15 @@ public class BankingController {
             String accountNumber) {
         try {
             return ResponseEntity.ok(new TransactionResponse(accountService.getStatement(accountNumber)));
-        } catch (AccountDbException e) {
+        } catch (AccountException e) {
             return handleException(e);
         }
     }
-    private static ResponseEntity<TransactionResponse> handleException(AccountDbException accountDbException) {
-        accountDbException.error().ifPresent( error -> log.error("Exception: ", error));
-        return switch (accountDbException.errorType()) {
+    private static ResponseEntity<TransactionResponse> handleException(AccountException accountException) {
+        accountException.error().ifPresent(error -> log.error("Exception: ", error));
+        return switch (accountException.errorType()) {
             case ACCOUNT_NOT_FOUND -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(new TransactionResponse("Account not found"));
+            case INSUFFICIENT_FUNDS -> ResponseEntity.status(HttpStatus.CONFLICT).body(new TransactionResponse("Insufficient funds"));
             case UNEXPECTED -> ResponseEntity.internalServerError().body(new TransactionResponse("Something went wrong"));
         };
     }
