@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.math.BigDecimal;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
@@ -29,8 +30,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 import reactor.core.publisher.Mono;
-
-import java.math.BigDecimal;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Testcontainers
