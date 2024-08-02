@@ -42,17 +42,15 @@ With the application running, you can consult the API documentation by pointing 
 ## How to test and run the application
 
 **You need to have Java 21 installed.**  
-  
-- To run the unit tests, enter:
-```
-./mvnw test
-```
-  The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
 
-- To run the integration tests, enter:
-```
-./mvnw verify
-```
+Type of test|Command line
+:---:|---
+unit|`./mvnw test`
+acceptance|`./mvnw test -P acceptance`
+integration|`./mvnw verify -P integration`
+
+The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
+
 The integration tests will try to download and spin up a MySQL container.  
 **N.B.**: You need to have a Docker daemon running on your machine.
 
