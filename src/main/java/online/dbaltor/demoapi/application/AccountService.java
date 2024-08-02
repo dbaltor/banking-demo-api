@@ -1,17 +1,18 @@
 package online.dbaltor.demoapi.application;
 
-import lombok.RequiredArgsConstructor;
-import online.dbaltor.demoapi.domain.StatementPrinterService;
-import online.dbaltor.demoapi.util.MyClock;
-import online.dbaltor.demoapi.dto.Transaction;
-import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-
 import static online.dbaltor.demoapi.dto.Transaction.Type.*;
 
+import java.math.BigDecimal;
+import lombok.RequiredArgsConstructor;
+import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
+import online.dbaltor.demoapi.domain.StatementPrinterService;
+import online.dbaltor.demoapi.dto.Transaction;
+import online.dbaltor.demoapi.util.MyClock;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AccountService {
     private final AccountRepository accountRepository;
@@ -19,11 +20,13 @@ public class AccountService {
     private final MyClock clock;
 
     public void deposit(String accountNumber, BigDecimal amount) {
-        accountRepository.addTransaction(accountNumber, Transaction.of(clock.todayAsString(), amount, DEPOSIT));
+        accountRepository.addTransaction(
+                accountNumber, Transaction.of(clock.todayAsString(), amount, DEPOSIT));
     }
 
     public void withdraw(String accountNumber, BigDecimal amount) {
-        accountRepository.addTransaction(accountNumber, Transaction.of(clock.todayAsString(), amount, WITHDRAWAL));
+        accountRepository.addTransaction(
+                accountNumber, Transaction.of(clock.todayAsString(), amount, WITHDRAWAL));
     }
 
     public String getStatement(String accountNumber) {
