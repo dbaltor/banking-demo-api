@@ -33,7 +33,7 @@ import reactor.core.publisher.Mono;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Testcontainers
-public class DemoApiApplicationIT {
+public class DemoAPIApplicationIT {
     private static final String BASE_URL = "/banking/v1";
     @LocalServerPort private Integer serverPort;
 

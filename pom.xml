@@ -216,7 +216,7 @@
                 <version>0.8.12</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/DemoApiApplication.class</exclude>
+                        <exclude>**/DemoAPIApplication.class</exclude>
                         <exclude>**/dto/*</exclude>
                         <exclude>**/*Db.class</exclude>
                         <exclude>**/*Exception.class</exclude>
