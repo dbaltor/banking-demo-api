@@ -3,8 +3,7 @@ package online.dbaltor.demoapi.adapter.persistence;
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.ACCOUNT_NOT_FOUND;
 import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
 import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
@@ -13,7 +12,6 @@ import java.util.Optional;
 import lombok.val;
 import online.dbaltor.demoapi.application.AccountException;
 import online.dbaltor.demoapi.dto.Transaction;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,14 +39,13 @@ class AccountRepositoryTest {
         given(accountDbRepository.findByNumber(ACCOUNT_NUMBER)).willReturn(Optional.empty());
         // When
         AccountException exception =
-                assertThrows(
+                catchThrowableOfType(
                         AccountException.class,
-                        () -> {
-                            accountRepository.addTransaction(
-                                    ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, DEPOSIT));
-                        });
+                        () ->
+                                accountRepository.addTransaction(
+                                        ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, DEPOSIT)));
         // Then
-        Assertions.assertEquals(ACCOUNT_NOT_FOUND, exception.errorType());
+        assertThat(exception.errorType()).isEqualTo(ACCOUNT_NOT_FOUND);
     }
 
     @Test
@@ -74,14 +71,13 @@ class AccountRepositoryTest {
         given(accountDbRepository.findByNumber(ACCOUNT_NUMBER)).willReturn(Optional.empty());
         // When
         AccountException exception =
-                assertThrows(
+                catchThrowableOfType(
                         AccountException.class,
-                        () -> {
-                            accountRepository.addTransaction(
-                                    ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, DEPOSIT));
-                        });
+                        () ->
+                                accountRepository.addTransaction(
+                                        ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, DEPOSIT)));
         // Then
-        assertEquals(ACCOUNT_NOT_FOUND, exception.errorType());
+        assertThat(exception.errorType()).isEqualTo(ACCOUNT_NOT_FOUND);
     }
 
     @Test

@@ -1,8 +1,7 @@
 package online.dbaltor.demoapi.acceptance.steps;
 
 import static java.util.stream.Collectors.joining;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 
 import io.cucumber.datatable.DataTable;
@@ -65,7 +64,7 @@ public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig
                 "she should be shown the following:",
                 (DataTable dataTable) -> {
                     val expectedStatement = STATEMENT_HEADER + statementLines(dataTable.asMaps());
-                    assertThat(statement, is(expectedStatement));
+                    assertThat(statement).isEqualTo(expectedStatement);
                 });
     }
 

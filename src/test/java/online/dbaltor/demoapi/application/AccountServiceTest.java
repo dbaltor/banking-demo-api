@@ -2,18 +2,17 @@ package online.dbaltor.demoapi.application;
 
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.INSUFFICIENT_FUNDS;
 import static online.dbaltor.demoapi.dto.Transaction.Type.*;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
 import java.math.BigDecimal;
-import java.util.List;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
 import online.dbaltor.demoapi.domain.StatementPrinterService;
 import online.dbaltor.demoapi.dto.Transaction;
 import online.dbaltor.demoapi.util.MyClock;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -75,7 +74,7 @@ class AccountServiceTest {
                             accountService.withdraw(ACCOUNT_NUMBER, TX_AMOUNT.add(BigDecimal.ONE));
                         });
         // Then
-        Assertions.assertEquals(INSUFFICIENT_FUNDS, exception.errorType());
+        assertThat(exception.errorType()).isEqualTo(INSUFFICIENT_FUNDS);
     }
 
     @Test
