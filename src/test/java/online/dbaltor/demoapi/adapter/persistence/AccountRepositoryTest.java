@@ -1,6 +1,7 @@
 package online.dbaltor.demoapi.adapter.persistence;
 
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.ACCOUNT_NOT_FOUND;
+import static online.dbaltor.demoapi.domain.TransactionTestHelper.*;
 import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
 import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
 import static org.assertj.core.api.Assertions.*;
@@ -49,7 +50,7 @@ class AccountRepositoryTest {
     }
 
     @Test
-    public void shouldCreateAndStoreDepositTransactionForAccount() {
+    public void shouldCreateAndStoreDepositTransaction() {
         // Given
         val initialTransactionDb = TransactionDb.of("01/03/2023", new BigDecimal(500), DEPOSIT);
         val initialAccountDb = AccountDb.of(ACCOUNT_NUMBER).addTransaction(initialTransactionDb);
@@ -81,7 +82,7 @@ class AccountRepositoryTest {
     }
 
     @Test
-    public void shouldCreateAndStoreWithdrawalTransactionForAccount() {
+    public void shouldCreateAndStoreWithdrawalTransaction() {
         // Given
         val initialTransactionDb = TransactionDb.of("01/03/2023", new BigDecimal(500), DEPOSIT);
         val initialAccountDb = AccountDb.of(ACCOUNT_NUMBER).addTransaction(initialTransactionDb);

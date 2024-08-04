@@ -1,17 +1,14 @@
 package online.dbaltor.demoapi.domain;
 
+import static online.dbaltor.demoapi.domain.TransactionTestHelper.*;
+
+import java.util.List;
 import lombok.val;
 import online.dbaltor.demoapi.dto.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
-import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
-
-import java.math.BigDecimal;
-import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,15 +48,4 @@ class StatementPrinterServiceTest {
         // Then
         assertThat(statement).isEqualTo(expectedStatement);
     }
-
-    private static List<Transaction> transactionsContaining(Transaction... transactions) {
-        return List.of(transactions);
-    }
-    private static Transaction deposit(String date, String amount) {
-        return Transaction.of(date, new BigDecimal(amount), DEPOSIT);
-    }
-    private static Transaction withdrawal(String date, String amount) {
-        return Transaction.of(date, new BigDecimal(amount), WITHDRAWAL);
-    }
-
 }

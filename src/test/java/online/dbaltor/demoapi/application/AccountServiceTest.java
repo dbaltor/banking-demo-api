@@ -1,6 +1,8 @@
 package online.dbaltor.demoapi.application;
 
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.INSUFFICIENT_FUNDS;
+import static online.dbaltor.demoapi.domain.TransactionTestHelper.deposit;
+import static online.dbaltor.demoapi.domain.TransactionTestHelper.transactionsContaining;
 import static online.dbaltor.demoapi.dto.Transaction.Type.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertThrows;
@@ -51,7 +53,7 @@ class AccountServiceTest {
     void shouldStoreWithdrawalTransaction() {
         // Given
         given(clock.todayAsString()).willReturn(TODAY);
-        val transactions = List.of(Transaction.of("23/03/2023", TX_AMOUNT, DEPOSIT));
+        val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
         given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         accountService.withdraw(ACCOUNT_NUMBER, TX_AMOUNT);
@@ -64,7 +66,7 @@ class AccountServiceTest {
     @Test
     void shouldRejectWithdrawalTransaction() {
         // Given
-        val transactions = List.of(Transaction.of("23/03/2023", TX_AMOUNT, DEPOSIT));
+        val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
         given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         AccountException exception =
@@ -80,7 +82,7 @@ class AccountServiceTest {
     @Test
     void shouldPrintStatement() {
         // Given
-        val transactions = List.of(Transaction.of("23/03/2023", TX_AMOUNT, DEPOSIT));
+        val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
         given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         accountService.getStatement(ACCOUNT_NUMBER);
