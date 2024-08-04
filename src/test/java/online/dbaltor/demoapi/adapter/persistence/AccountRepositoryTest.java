@@ -98,4 +98,27 @@ class AccountRepositoryTest {
         // Then
         then(accountDbRepository).should().save(finalAccountDb);
     }
+
+    @Test
+    public void shouldRetrieveAllTransactions() {
+        // Given
+        val initialAccountDb = AccountDb.of(ACCOUNT_NUMBER);
+        initialAccountDb.addTransaction(
+                TransactionDb.of("01/12/2017", new BigDecimal("1000.00"), DEPOSIT));
+        initialAccountDb.addTransaction(
+                TransactionDb.of("10/12/2017", new BigDecimal("100.00"), WITHDRAWAL));
+        initialAccountDb.addTransaction(
+                TransactionDb.of("12/12/2017", new BigDecimal("500.00"), DEPOSIT));
+        val initialTransactions =
+                transactionsContaining(
+                        deposit("01/12/2017", "1000.00"),
+                        withdrawal("10/12/2017", "100.00"),
+                        deposit("12/12/2017", "500.00"));
+        given(accountDbRepository.findByNumber(ACCOUNT_NUMBER))
+                .willReturn(Optional.of(initialAccountDb));
+        // When
+        val transactions = accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER);
+        // Then
+        assertThat(transactions).hasSameElementsAs(initialTransactions);
+    }
 }
