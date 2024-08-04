@@ -4,6 +4,7 @@ import static online.dbaltor.demoapi.application.AccountException.ErrorType.*;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,6 +43,39 @@ public class BankingControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
                 .andExpect(jsonPath("$.message", is("Deposit transaction successful")));
+    }
+
+    @Test
+    void shouldReturn200WhenWithdrawalBodyIsValid() throws Exception {
+        // Given
+        val transactionRequest = new TransactionRequest("123456", "100.00");
+        // When
+        mockMvc.perform(
+                        post(BASE_URL + "/withdrawal")
+                                .contentType(APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(transactionRequest)))
+                // Then
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Withdrawal transaction successful")));
+    }
+
+    @Test
+    void shouldReturn409WhenInsufficientFunds() throws Exception {
+        // Given
+        doThrow(AccountException.of(INSUFFICIENT_FUNDS, Optional.empty()))
+                .when(accountService)
+                .withdraw(any(), any());
+        val transactionRequest = new TransactionRequest("123456", "100.00");
+        // When
+        mockMvc.perform(
+                        post(BASE_URL + "/withdrawal")
+                                .contentType(APPLICATION_JSON_VALUE)
+                                .content(objectMapper.writeValueAsString(transactionRequest)))
+                // Then
+                .andExpect(status().isConflict())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.message", is("Insufficient funds")));
     }
 
     @Test
