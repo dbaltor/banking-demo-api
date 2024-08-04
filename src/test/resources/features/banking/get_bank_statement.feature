@@ -5,7 +5,7 @@ Feature: Get Bank Statement
   I want to read my bank statement
 
   Scenario: Getting a bank statement after performing transactions
-    Given Jane has a bank account number 123456
+    Given Jane has a bank account with number 123456
     And she deposits 1000.00 GBP on 01/03/2023
     And she withdraws 100.00 GBP on 14/03/2023
     And she deposits 500.00 GBP on 01/04/2023

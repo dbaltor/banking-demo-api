@@ -1,4 +1,4 @@
-package online.dbaltor.demoapi.acceptance.steps.domain;
+package online.dbaltor.demoapi.acceptance.steps.apis;
 
 import static org.springframework.http.HttpHeaders.*;
 import static org.springframework.http.MediaType.*;
@@ -14,7 +14,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
-public class BankingClient {
+public class BankingAPI {
     private static final String BASE_URL = "/banking/v1";
     private @NonNull int serverPort;
 
