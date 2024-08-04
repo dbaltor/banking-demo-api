@@ -49,6 +49,7 @@ unit|`./mvnw test`
 acceptance|`./mvnw test -P acceptance`
 integration|`./mvnw verify -P integration`
 
+The code coverage report will be available at `target/site/jacoco/index.html`  
 The acceptance tests report will be available at `target/AcceptanceTestReports/report.html`
 
 The integration tests will try to download and spin up a MySQL container.  
