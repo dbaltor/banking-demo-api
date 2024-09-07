@@ -8,6 +8,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.math.BigDecimal;
+
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
@@ -35,10 +36,13 @@ import reactor.core.publisher.Mono;
 @Testcontainers
 public class DemoAPIApplicationIT {
     private static final String BASE_URL = "/banking/v1";
-    @LocalServerPort private Integer serverPort;
 
-    @Container @ServiceConnection
-    static MySQLContainer<?> mysql = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"));
+    @LocalServerPort
+    private Integer serverPort;
+
+    @Container
+    @ServiceConnection
+    private static final MySQLContainer<?> mysql = new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"));
 
     private final String accountNumber = "123456";
     private final String transactionAmount = "100.00";
@@ -48,8 +52,10 @@ public class DemoAPIApplicationIT {
         return WebTestClient.bindToServer().baseUrl("http://localhost:" + serverPort).build();
     }
 
-    @Autowired private AccountRepository accountRepository;
-    @Autowired private AccountDbRepository accountDbRepository;
+    @Autowired
+    private AccountRepository accountRepository;
+    @Autowired
+    private AccountDbRepository accountDbRepository;
 
     @BeforeEach
     void setUp() {
