@@ -223,7 +223,6 @@
                     <excludes>
                         <exclude>**/DemoAPIApplication.class</exclude>
                         <exclude>**/dto/*</exclude>
-                        <exclude>**/*Db.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -253,12 +252,7 @@
                                         <limit>
                                             <counter>LINE</counter>
                                             <value>COVEREDRATIO</value>
-                                            <minimum>85%</minimum>
-                                        </limit>
-                                        <limit>
-                                            <counter>CLASS</counter>
-                                            <value>MISSEDCOUNT</value>
-                                            <maximum>0</maximum>
+                                            <minimum>90%</minimum>
                                         </limit>
                                     </limits>
                                 </rule>

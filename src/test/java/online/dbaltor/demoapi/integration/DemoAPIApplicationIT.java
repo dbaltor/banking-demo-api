@@ -1,7 +1,7 @@
 package online.dbaltor.demoapi.integration;
 
-import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
-import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.DEPOSIT;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.WITHDRAWAL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
@@ -11,11 +11,11 @@ import java.math.BigDecimal;
 import lombok.val;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionRequest;
 import online.dbaltor.demoapi.adapter.controller.dto.TransactionResponse;
-import online.dbaltor.demoapi.adapter.persistence.AccountDb;
-import online.dbaltor.demoapi.adapter.persistence.AccountDbRepository;
+import online.dbaltor.demoapi.adapter.persistence.Account;
 import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
-import online.dbaltor.demoapi.dto.Account;
-import online.dbaltor.demoapi.dto.Transaction;
+import online.dbaltor.demoapi.adapter.persistence.AccountVORepository;
+import online.dbaltor.demoapi.domain.AccountVO;
+import online.dbaltor.demoapi.domain.TransactionVO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -44,29 +44,29 @@ public class DemoAPIApplicationIT {
 
     private final String accountNumber = "654321";
     private final String transactionAmount = "100.00";
-    private AccountDb accountDb;
+    private Account account;
 
     private WebTestClient testClient() {
         return WebTestClient.bindToServer().baseUrl("http://localhost:" + serverPort).build();
     }
 
+    @Autowired private AccountVORepository accountVORepository;
     @Autowired private AccountRepository accountRepository;
-    @Autowired private AccountDbRepository accountDbRepository;
 
     @BeforeEach
     void setUp() {
-        val account = Account.of(accountNumber);
+        val account = AccountVO.of(accountNumber);
         account.addTransaction(
-                Transaction.of(
+                TransactionVO.of(
                         "23/03/2023",
                         new BigDecimal(transactionAmount).add(BigDecimal.ONE),
                         DEPOSIT));
-        this.accountDb = accountDbRepository.save(AccountDb.of(account));
+        this.account = accountRepository.save(Account.of(account));
     }
 
     @AfterEach
     void tearDown() {
-        accountDbRepository.delete(accountDb);
+        accountRepository.delete(account);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class DemoAPIApplicationIT {
                 .expectBody(TransactionResponse.class)
                 .isEqualTo(new TransactionResponse("Deposit transaction successful"));
 
-        val transactions = accountRepository.retrieveAllTransactions(accountNumber);
+        val transactions = accountVORepository.retrieveAllTransactions(accountNumber);
         assertThat(transactions, hasSize(2));
         assertThat(transactions.get(1).getAmount().toString(), is(transactionAmount));
         assertThat(transactions.get(1).getType(), is(DEPOSIT));
@@ -115,7 +115,7 @@ public class DemoAPIApplicationIT {
                 .expectBody(TransactionResponse.class)
                 .isEqualTo(new TransactionResponse("Withdrawal transaction successful"));
 
-        val transactions = accountRepository.retrieveAllTransactions(accountNumber);
+        val transactions = accountVORepository.retrieveAllTransactions(accountNumber);
         assertThat(transactions, hasSize(2));
         assertThat(transactions.get(1).getAmount().toString(), is(transactionAmount));
         assertThat(transactions.get(1).getType(), is(WITHDRAWAL));

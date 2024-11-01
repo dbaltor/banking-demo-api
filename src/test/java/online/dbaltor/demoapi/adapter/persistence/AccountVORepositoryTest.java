@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class AccountRepositoryTest {
+class AccountVORepositoryTest {
     private static final String TODAY = "01/04/2023";
     private static final String ACCOUNT_NUMBER = "1";
     private static final BigDecimal TX_AMOUNT = new BigDecimal(100);
@@ -53,19 +53,19 @@ class AccountRepositoryTest {
     @Test
     public void shouldCreateAndStoreDepositTransaction() {
         // Given
-        val initialTransactionDb = Transaction.of("01/03/2023", new BigDecimal(500), DEPOSIT);
-        val initialAccountDb = Account.of(ACCOUNT_NUMBER).addTransaction(initialTransactionDb);
-        val finalAccountDb =
+        val initialTransaction = Transaction.of("01/03/2023", new BigDecimal(500), DEPOSIT);
+        val initialAccount = Account.of(ACCOUNT_NUMBER).addTransaction(initialTransaction);
+        val finalAccount =
                 Account.of(ACCOUNT_NUMBER)
-                        .addTransaction(initialTransactionDb)
+                        .addTransaction(initialTransaction)
                         .addTransaction(Transaction.of(TODAY, TX_AMOUNT, DEPOSIT));
         given(accountRepository.findByNumber(ACCOUNT_NUMBER))
-                .willReturn(Optional.of(initialAccountDb));
+                .willReturn(Optional.of(initialAccount));
         // When
         accountVORepository.addTransaction(
                 ACCOUNT_NUMBER, TransactionVO.of(TODAY, TX_AMOUNT, DEPOSIT));
         // Then
-        then(accountRepository).should().save(finalAccountDb);
+        then(accountRepository).should().save(finalAccount);
     }
 
     @Test
@@ -87,30 +87,30 @@ class AccountRepositoryTest {
     @Test
     public void shouldCreateAndStoreWithdrawalTransaction() {
         // Given
-        val initialTransactionDb = Transaction.of("01/03/2023", new BigDecimal(500), DEPOSIT);
-        val initialAccountDb = Account.of(ACCOUNT_NUMBER).addTransaction(initialTransactionDb);
-        val finalAccountDb =
+        val initialTransaction = Transaction.of("01/03/2023", new BigDecimal(500), DEPOSIT);
+        val initialAccount = Account.of(ACCOUNT_NUMBER).addTransaction(initialTransaction);
+        val finalAccount =
                 Account.of(ACCOUNT_NUMBER)
-                        .addTransaction(initialTransactionDb)
+                        .addTransaction(initialTransaction)
                         .addTransaction(Transaction.of(TODAY, TX_AMOUNT, WITHDRAWAL));
         given(accountRepository.findByNumber(ACCOUNT_NUMBER))
-                .willReturn(Optional.of(initialAccountDb));
+                .willReturn(Optional.of(initialAccount));
         // When
         accountVORepository.addTransaction(
                 ACCOUNT_NUMBER, TransactionVO.of(TODAY, TX_AMOUNT, WITHDRAWAL));
         // Then
-        then(accountRepository).should().save(finalAccountDb);
+        then(accountRepository).should().save(finalAccount);
     }
 
     @Test
     public void shouldRetrieveAllTransactions() {
         // Given
-        val initialAccountDb = Account.of(ACCOUNT_NUMBER);
-        initialAccountDb.addTransaction(
+        val initialAccount = Account.of(ACCOUNT_NUMBER);
+        initialAccount.addTransaction(
                 Transaction.of("01/12/2017", new BigDecimal("1000.00"), DEPOSIT));
-        initialAccountDb.addTransaction(
+        initialAccount.addTransaction(
                 Transaction.of("10/12/2017", new BigDecimal("100.00"), WITHDRAWAL));
-        initialAccountDb.addTransaction(
+        initialAccount.addTransaction(
                 Transaction.of("12/12/2017", new BigDecimal("500.00"), DEPOSIT));
         val initialTransactions =
                 transactionsContaining(
@@ -118,7 +118,7 @@ class AccountRepositoryTest {
                         withdrawal("10/12/2017", "100.00"),
                         deposit("12/12/2017", "500.00"));
         given(accountRepository.findByNumber(ACCOUNT_NUMBER))
-                .willReturn(Optional.of(initialAccountDb));
+                .willReturn(Optional.of(initialAccount));
         // When
         val transactions = accountVORepository.retrieveAllTransactions(ACCOUNT_NUMBER);
         // Then
