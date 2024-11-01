@@ -122,13 +122,13 @@ public class BankingControllerTest {
     }
 
     @Test
-    void shouldReturn400WhenStatementAccountIsMissing() throws Exception {
+    void shouldReturn404WhenAccountIsNotInformed() throws Exception {
         // When
         mockMvc.perform(get(BASE_URL + "/statement/").contentType(APPLICATION_JSON_VALUE))
                 // Then
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
-                .andExpect(jsonPath("$.message", is("account is missing")));
+                .andExpect(jsonPath("$.message", is("Resource not found")));
     }
 
     @Test
