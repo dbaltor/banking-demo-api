@@ -3,7 +3,7 @@ package online.dbaltor.demoapi.application;
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.INSUFFICIENT_FUNDS;
 import static online.dbaltor.demoapi.domain.TransactionTestHelper.deposit;
 import static online.dbaltor.demoapi.domain.TransactionTestHelper.transactionsContaining;
-import static online.dbaltor.demoapi.dto.Transaction.Type.*;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -11,9 +11,9 @@ import static org.mockito.BDDMockito.then;
 
 import java.math.BigDecimal;
 import lombok.val;
-import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
+import online.dbaltor.demoapi.adapter.persistence.AccountVORepository;
 import online.dbaltor.demoapi.domain.StatementPrinterService;
-import online.dbaltor.demoapi.dto.Transaction;
+import online.dbaltor.demoapi.domain.TransactionVO;
 import online.dbaltor.demoapi.util.MyClock;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,12 +29,12 @@ class AccountServiceTest {
     private static final BigDecimal TX_AMOUNT = new BigDecimal(100);
     @Mock private MyClock clock;
     @Mock private StatementPrinterService statementPrinterService;
-    @Mock private AccountRepository accountRepository;
+    @Mock private AccountVORepository accountVORepository;
     private AccountService accountService;
 
     @BeforeEach
     public void initialise() {
-        accountService = new AccountService(accountRepository, statementPrinterService, clock);
+        accountService = new AccountService(accountVORepository, statementPrinterService, clock);
     }
 
     @Test
@@ -44,9 +44,9 @@ class AccountServiceTest {
         // When
         accountService.deposit(ACCOUNT_NUMBER, TX_AMOUNT);
         // Then
-        then(accountRepository)
+        then(accountVORepository)
                 .should()
-                .addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, DEPOSIT));
+                .addTransaction(ACCOUNT_NUMBER, TransactionVO.of(TODAY, TX_AMOUNT, DEPOSIT));
     }
 
     @Test
@@ -54,20 +54,20 @@ class AccountServiceTest {
         // Given
         given(clock.todayAsString()).willReturn(TODAY);
         val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
-        given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
+        given(accountVORepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         accountService.withdraw(ACCOUNT_NUMBER, TX_AMOUNT);
         // Then
-        then(accountRepository)
+        then(accountVORepository)
                 .should()
-                .addTransaction(ACCOUNT_NUMBER, Transaction.of(TODAY, TX_AMOUNT, WITHDRAWAL));
+                .addTransaction(ACCOUNT_NUMBER, TransactionVO.of(TODAY, TX_AMOUNT, WITHDRAWAL));
     }
 
     @Test
     void shouldRejectWithdrawalTransaction() {
         // Given
         val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
-        given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
+        given(accountVORepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         AccountException exception =
                 assertThrows(
@@ -83,7 +83,7 @@ class AccountServiceTest {
     void shouldPrintStatement() {
         // Given
         val transactions = transactionsContaining(deposit("23/03/2023", TX_AMOUNT.toString()));
-        given(accountRepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
+        given(accountVORepository.retrieveAllTransactions(ACCOUNT_NUMBER)).willReturn(transactions);
         // When
         accountService.getStatement(ACCOUNT_NUMBER);
         // Then

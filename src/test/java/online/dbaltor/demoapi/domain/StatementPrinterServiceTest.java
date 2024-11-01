@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.*;
 
 import java.util.List;
 import lombok.val;
-import online.dbaltor.demoapi.dto.Transaction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class StatementPrinterServiceTest {
-    private static final List<Transaction> NO_TRANSACTIONS = List.of();
+    private static final List<TransactionVO> NO_TRANSACTIONS = List.of();
     private StatementPrinterService statementPrinterService;
 
     @BeforeEach

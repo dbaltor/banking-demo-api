@@ -1,22 +1,21 @@
 package online.dbaltor.demoapi.domain;
 
-import static online.dbaltor.demoapi.dto.Transaction.Type.DEPOSIT;
-import static online.dbaltor.demoapi.dto.Transaction.Type.WITHDRAWAL;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.DEPOSIT;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.WITHDRAWAL;
 
 import java.math.BigDecimal;
 import java.util.List;
-import online.dbaltor.demoapi.dto.Transaction;
 
 public class TransactionTestHelper {
-    public static List<Transaction> transactionsContaining(Transaction... transactions) {
+    public static List<TransactionVO> transactionsContaining(TransactionVO... transactions) {
         return List.of(transactions);
     }
 
-    public static Transaction deposit(String date, String amount) {
-        return Transaction.of(date, new BigDecimal(amount), DEPOSIT);
+    public static TransactionVO deposit(String date, String amount) {
+        return TransactionVO.of(date, new BigDecimal(amount), DEPOSIT);
     }
 
-    public static Transaction withdrawal(String date, String amount) {
-        return Transaction.of(date, new BigDecimal(amount), WITHDRAWAL);
+    public static TransactionVO withdrawal(String date, String amount) {
+        return TransactionVO.of(date, new BigDecimal(amount), WITHDRAWAL);
     }
 }

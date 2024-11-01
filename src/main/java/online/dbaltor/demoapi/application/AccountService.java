@@ -1,15 +1,15 @@
 package online.dbaltor.demoapi.application;
 
 import static online.dbaltor.demoapi.application.AccountException.ErrorType.INSUFFICIENT_FUNDS;
-import static online.dbaltor.demoapi.dto.Transaction.Type.*;
+import static online.dbaltor.demoapi.domain.TransactionVO.Type.*;
 
 import java.math.BigDecimal;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
+import online.dbaltor.demoapi.adapter.persistence.AccountVORepository;
 import online.dbaltor.demoapi.domain.StatementPrinterService;
-import online.dbaltor.demoapi.dto.Transaction;
+import online.dbaltor.demoapi.domain.TransactionVO;
 import online.dbaltor.demoapi.util.MyClock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,18 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @RequiredArgsConstructor
 public class AccountService {
-    private final AccountRepository accountRepository;
+    private final AccountVORepository accountVORepository;
     private final StatementPrinterService statementPrinterService;
     private final MyClock clock;
 
     public void deposit(String accountNumber, BigDecimal amount) {
-        accountRepository.addTransaction(
-                accountNumber, Transaction.of(clock.todayAsString(), amount, DEPOSIT));
+        accountVORepository.addTransaction(
+                accountNumber, TransactionVO.of(clock.todayAsString(), amount, DEPOSIT));
     }
 
     public void withdraw(String accountNumber, BigDecimal amount) {
         val accountBalance =
-                accountRepository.retrieveAllTransactions(accountNumber).stream()
+                accountVORepository.retrieveAllTransactions(accountNumber).stream()
                         .map(
                                 tx ->
                                         tx.getType() == DEPOSIT
@@ -38,12 +38,12 @@ public class AccountService {
                         .reduce(BigDecimal.ZERO, BigDecimal::add);
         if (amount.compareTo(accountBalance) > 0)
             throw AccountException.of(INSUFFICIENT_FUNDS, Optional.empty());
-        accountRepository.addTransaction(
-                accountNumber, Transaction.of(clock.todayAsString(), amount, WITHDRAWAL));
+        accountVORepository.addTransaction(
+                accountNumber, TransactionVO.of(clock.todayAsString(), amount, WITHDRAWAL));
     }
 
     public String getStatement(String accountNumber) {
-        var transactions = accountRepository.retrieveAllTransactions(accountNumber);
+        var transactions = accountVORepository.retrieveAllTransactions(accountNumber);
         return statementPrinterService.print(transactions);
     }
 }

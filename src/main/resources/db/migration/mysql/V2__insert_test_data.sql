@@ -1,1 +1,1 @@
-INSERT INTO account_db (number) VALUES (123456);
+INSERT INTO account (number) VALUES (123456);

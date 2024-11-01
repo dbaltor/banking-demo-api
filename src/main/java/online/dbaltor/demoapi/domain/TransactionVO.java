@@ -1,11 +1,13 @@
-package online.dbaltor.demoapi.dto;
-
-import lombok.*;
+package online.dbaltor.demoapi.domain;
 
 import java.math.BigDecimal;
+import lombok.*;
 
-@Data @NoArgsConstructor @AllArgsConstructor @RequiredArgsConstructor(staticName = "of")
-public class Transaction {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@RequiredArgsConstructor(staticName = "of")
+public class TransactionVO {
     private Long id;
     private @NonNull String date;
     private @NonNull BigDecimal amount;

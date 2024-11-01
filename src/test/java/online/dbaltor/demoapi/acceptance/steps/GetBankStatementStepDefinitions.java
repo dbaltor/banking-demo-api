@@ -11,9 +11,9 @@ import java.util.Map;
 import lombok.val;
 import online.dbaltor.demoapi.acceptance.spring.CucumberSpringContextConfig;
 import online.dbaltor.demoapi.acceptance.steps.apis.BankingAPI;
-import online.dbaltor.demoapi.adapter.persistence.AccountDb;
-import online.dbaltor.demoapi.adapter.persistence.AccountDbRepository;
-import online.dbaltor.demoapi.dto.Account;
+import online.dbaltor.demoapi.adapter.persistence.Account;
+import online.dbaltor.demoapi.adapter.persistence.AccountRepository;
+import online.dbaltor.demoapi.domain.AccountVO;
 import online.dbaltor.demoapi.util.MyClock;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +21,7 @@ public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig
     private static final String STATEMENT_HEADER = "DATE       | AMOUNT | BALANCE\n";
 
     @Autowired private MyClock clock;
-    @Autowired private AccountDbRepository accountDbRepository;
+    @Autowired private AccountRepository accountRepository;
 
     private BankingAPI bankingAPI;
     private String accountNumber;
@@ -32,14 +32,14 @@ public class GetBankStatementStepDefinitions extends CucumberSpringContextConfig
         Before(
                 () -> {
                     bankingAPI = new BankingAPI(getServerPort());
-                    accountDbRepository.deleteAll();
+                    accountRepository.deleteAll();
                 });
 
         Given(
                 "Jane has a bank account with number {word}",
                 (String number) -> {
                     this.accountNumber = number;
-                    accountDbRepository.save(AccountDb.of(Account.of(accountNumber)));
+                    accountRepository.save(Account.of(AccountVO.of(accountNumber)));
                 });
 
         And(

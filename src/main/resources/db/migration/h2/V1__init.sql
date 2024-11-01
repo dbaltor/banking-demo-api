@@ -1,9 +1,9 @@
-CREATE TABLE account_db (
+CREATE TABLE account (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     number VARCHAR(6) NOT NULL UNIQUE
 );
 
-CREATE TABLE transaction_db (
+CREATE TABLE transaction (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     date VARCHAR(10) NOT NULL,
     amount NUMERIC(7, 2) NOT NULL,
@@ -11,6 +11,6 @@ CREATE TABLE transaction_db (
     account_id BIGINT NOT NULL
 );
 
-ALTER TABLE transaction_db
+ALTER TABLE transaction
     ADD FOREIGN KEY (account_id)
-    REFERENCES account_db(id);
+    REFERENCES account(id);
