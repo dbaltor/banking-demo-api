@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 import lombok.*;
 import online.dbaltor.demoapi.domain.AccountVO;
-import online.dbaltor.demoapi.util.ExcludeFromJacocoGeneratedReport;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
@@ -23,7 +22,7 @@ public class Account {
         return this;
     }
 
-    @ExcludeFromJacocoGeneratedReport
+    @Generated
     public AccountVO account() {
         val accountVO = AccountVO.of(this.number);
         accountVO.setId(this.id);
@@ -31,7 +30,7 @@ public class Account {
         return accountVO;
     }
 
-    @ExcludeFromJacocoGeneratedReport
+    @Generated
     public static Account of(AccountVO accountVO) {
         val account = Account.of(accountVO.getNumber());
         account.setId(accountVO.getId());

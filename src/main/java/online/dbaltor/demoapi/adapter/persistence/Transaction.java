@@ -5,7 +5,6 @@ import static online.dbaltor.demoapi.domain.TransactionVO.*;
 import java.math.BigDecimal;
 import lombok.*;
 import online.dbaltor.demoapi.domain.TransactionVO;
-import online.dbaltor.demoapi.util.ExcludeFromJacocoGeneratedReport;
 import org.springframework.data.annotation.Id;
 
 @Data
@@ -17,14 +16,12 @@ public class Transaction {
     private @NonNull BigDecimal amount;
     private @NonNull Type type;
 
-    @ExcludeFromJacocoGeneratedReport
     public TransactionVO transaction() {
         val transactionVO = TransactionVO.of(this.date, this.amount, this.type);
         transactionVO.setId(this.id);
         return transactionVO;
     }
 
-    @ExcludeFromJacocoGeneratedReport
     public static Transaction of(TransactionVO transactionVO) {
         val transaction =
                 Transaction.of(

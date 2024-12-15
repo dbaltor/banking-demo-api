@@ -2,6 +2,7 @@ package online.dbaltor.demoapi.util;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import lombok.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated
