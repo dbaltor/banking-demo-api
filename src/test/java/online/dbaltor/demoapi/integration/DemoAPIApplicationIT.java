@@ -40,7 +40,7 @@ public class DemoAPIApplicationIT {
 
     @Container @ServiceConnection
     private static final MySQLContainer<?> mysql =
-            new MySQLContainer<>(DockerImageName.parse("mysql:8.0.33"));
+            new MySQLContainer<>(DockerImageName.parse("mysql:9.1.0"));
 
     private final String accountNumber = "654321";
     private final String transactionAmount = "100.00";
